@@ -24,7 +24,17 @@ class LivroControlador {
       resp.marko(
           require('../views/livros/form/form.marko'),
           { livro: {} });
+    }
   }
+
+  formularioEdicao() {
+    return function(req, resp) {
+      const livroDao = new LivroDao(db);
+
+      livroDao.atualiza(req.body)
+              .then(resp.redirect('/livros'))
+              .catch(erro => console.log(erro));
+    }
   }
 
 
