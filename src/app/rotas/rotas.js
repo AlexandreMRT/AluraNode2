@@ -2,6 +2,10 @@ const { check, validationResult } = require('express-validator/check');
 const LivroDao = require('../infra/livro-dao');
 const db = require('../../config/database');
 
+const LivroControlador = require('../controladores/livro-contolador');
+
+const livroControlador = new LivroControlador();
+
 module.exports = (app) => {
     app.get('/', function(req, resp) {
         resp.marko(
@@ -9,22 +13,9 @@ module.exports = (app) => {
         );
     });
     
-    app.get('/livros', function(req, resp) {
+    app.get('/livros', livroControlador.lista());
 
-        const livroDao = new LivroDao(db);
-        livroDao.lista()
-                .then(livros => resp.marko(
-                    require('../views/livros/lista/lista.marko'),
-                    {
-                        livros: livros
-                    }
-                ))
-                .catch(erro => console.log(erro));
-    });
-
-    app.get('/livros/form', function(req, resp) {
-        resp.marko(require('../views/livros/form/form.marko'), { livro: {} });
-    });
+    app.get('/livros/form', livroControlador.formularioCadastro());
 
     app.get('/livros/form/:id', function(req, resp) {
         const id = req.params.id;
