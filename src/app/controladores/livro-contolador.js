@@ -4,6 +4,7 @@ const db = require('../../config/database');
 
 
 class LivroControlador {
+
   lista() {
     return function(req, resp) {
 
@@ -28,6 +29,22 @@ class LivroControlador {
   }
 
   formularioEdicao() {
+    return function(req, resp) {
+      const id = req.params.id;
+      const livroDao = new LivroDao(db);
+
+      livroDao.buscaPorId(id)
+              .then(livro =>
+                resp.marko(
+                  require('../views/livros/form/form.marko'),
+                  { livro: livro }
+                )
+              )
+              .catch(erro => console.log(erro));
+  }
+  }
+
+  edita() {
     return function(req, resp) {
       const livroDao = new LivroDao(db);
 
@@ -54,6 +71,17 @@ class LivroControlador {
 
       livroDao.adiciona(req.body)
               .then(resp.redirect('/livros'))
+              .catch(erro => console.log(erro));
+    }
+  }
+
+  remove(){
+    return function(req, resp) {
+      const id = req.params.id;
+
+      const livroDao = new LivroDao(db);
+        livroDao.remove(id)
+              .then(() => resp.status(200).end())
               .catch(erro => console.log(erro));
     }
   }
