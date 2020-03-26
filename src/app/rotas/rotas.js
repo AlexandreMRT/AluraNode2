@@ -55,14 +55,7 @@ module.exports = (app) => {
                 .catch(erro => console.log(erro));
     });
 
-    app.put('/livros', function(req, resp) {
-        console.log(req.body);
-        const livroDao = new LivroDao(db);
-        
-        livroDao.atualiza(req.body)
-                .then(resp.redirect('/livros'))
-                .catch(erro => console.log(erro));
-    });
+    app.put('/livros', livroControlador.formularioEdicao());
 
     app.delete('/livros/:id', function(req, resp) {
         const id = req.params.id;
