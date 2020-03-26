@@ -34,26 +34,7 @@ module.exports = (app) => {
     app.post('/livros', [
         check('titulo').isLength({ min: 5 }).withMessage(' titulo precisa ter no minimo 5 caracteres.'),
         check('preco').isCurrency().withMessage('O preço precisa ter um valor monetario valido!')
-    ], function(req, resp) {
-        console.log(req.body);
-        const livroDao = new LivroDao(db);
-
-        const erros = validationResult(req);
-        console.log(erros.isEmpty());
-        if(!erros.isEmpty()){
-          return resp.marko(
-            require('../views/livros/form/form.marko'),
-            {
-              livro: req.body,
-              errosValidacao: erros.array()
-            }
-          );
-        }
-        
-        livroDao.adiciona(req.body)
-                .then(resp.redirect('/livros'))
-                .catch(erro => console.log(erro));
-    });
+    ], livroControlador.cadatra());
 
     app.put('/livros', livroControlador.formularioEdicao());
 
