@@ -5,10 +5,19 @@ const LivroControlador = require('../controladores/livro-contolador');
 const livroControlador = new LivroControlador();
 
 const Livro = require('../modelos/livro')
+const Basecontrolador = require('../controladores/base-controlador')
 
 module.exports = (app) => {
 
   const rotasLivro = LivroControlador.rotas();
+
+  app.use(rotasLivro.autenticadas, function(req, resp, next) {
+    if (req.isAuthenticated()){
+      next();
+    } else {
+      resp.redirect(Basecontrolador.rotas().login)
+    }
+  });
 
   app.get(rotasLivro.lista, livroControlador.lista());
 
